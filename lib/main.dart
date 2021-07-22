@@ -10,9 +10,15 @@ void main() => runApp(GetMaterialApp(
       locale: Locale('pt', 'BR'),
       theme: new ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        primaryColor: Colors.orange,
-        primaryColorLight: Colors.orange[200],
-        primaryColorDark: Colors.orange[900],
+        dividerTheme: DividerThemeData(
+          thickness: 0.5,
+          indent: 0,
+          endIndent: 0,
+          color: Colors.blue[900],
+        ),
+        primaryColor: Colors.blue[900],
+        primaryColorLight: Colors.blue[200],
+        primaryColorDark: Colors.indigo[900],
         backgroundColor: Colors.white,
       ),
       getPages: [
