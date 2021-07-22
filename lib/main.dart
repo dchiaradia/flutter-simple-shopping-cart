@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Screens/splashScreen.dart';
 import 'Screens/dashboard.dart';
+import 'Screens/carrinho.dart';
 
 void main() => runApp(GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -29,6 +30,10 @@ void main() => runApp(GetMaterialApp(
         GetPage(
           name: '/dashboard',
           page: () => DashboardPage(),
-        )
+        ),
+        GetPage(
+          name: '/carrinho',
+          page: () => CarrinhoPage(),
+        ),
       ],
     ));

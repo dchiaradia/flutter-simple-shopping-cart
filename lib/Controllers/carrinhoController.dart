@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:novo/Models/cartItems.dart';
-import '../Controllers/defaultController.dart';
 
-import '../Controllers/productsController.dart';
+//import '../Controllers/productsController.dart';
+import '../Controllers/defaultController.dart';
 import '../Controllers/cartController.dart';
 import '../Models/productsModel.dart';
 import '../Widgets/textFieldSpinner.dart';
 
-class DashboardController extends GetxController {
-  late List<ProductsModel> listaProdutos = List<ProductsModel>.empty();
+class CarrinhoController extends GetxController {
+  late List<CartItemsModel> listaItens;
   Cart myCart = new Cart();
   late Widget widgetListViewProdutos = loadding(92, 92);
 
@@ -29,8 +29,8 @@ class DashboardController extends GetxController {
 
   @override
   void onReady() {
-    getAllProducts();
     print('onReady');
+    this.getAllProducts();
     super.onReady();
   }
 
@@ -41,19 +41,11 @@ class DashboardController extends GetxController {
   }
 
   void getAllProducts() async {
-    print('bucando produtos');
-    final produtos = Products();
-    //List<ProductsModel> retorno = await produtos.getAllProducts();
-
-    if (!listaProdutos.isEmpty) {
-      widgetListViewProdutos = listViewProducts(listaProdutos);
-      return;
-    }
-
-    listaProdutos = await produtos.getAllProducts();
-    widgetListViewProdutos = listViewProducts(listaProdutos);
+    print('atualizando carrinho');
+    listaItens = await myCart.getProducts();
+    widgetListViewProdutos = await listViewProducts(listaItens);
     update();
-    //this.getAllProducts();
+    print('carrinho atualizado');
   }
 
   Widget loadding(double height, double width) {
@@ -75,7 +67,7 @@ class DashboardController extends GetxController {
     );
   }
 
-  Widget listViewProducts(List<ProductsModel> myList) {
+  Widget listViewProducts(List<CartItemsModel> myList) {
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 0),
       child: ListView.builder(
@@ -102,26 +94,6 @@ class DashboardController extends GetxController {
             padding: EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),
             child: Column(
               children: <Widget>[
-                Container(
-                  width: Get.size.width * 1,
-                  child: Text(
-                    model.category.toString().capitalize!,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.grey),
-                  ),
-                ),
-                Container(
-                  width: Get.size.width * 1,
-                  child: Text(
-                    model.title,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black),
-                  ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -131,7 +103,9 @@ class DashboardController extends GetxController {
                             padding: EdgeInsets.only(
                                 left: 0, top: 0, right: 0, bottom: 0),
                             child: CachedNetworkImage(
-                                imageUrl: model.image, height: 92, width: 92)),
+                                imageUrl: model.productImage,
+                                height: 92,
+                                width: 92)),
                       ],
                     ),
                     Column(
@@ -140,17 +114,17 @@ class DashboardController extends GetxController {
                         Container(
                           width: Get.size.width * 0.6,
                           child: Text(
-                            model.description,
+                            model.productName,
                             style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                                color: Colors.grey),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Colors.black),
                           ),
                         ),
                         Container(
                           width: Get.size.width * 0.6,
                           child: Text(
-                            "R\$ " + model.price.toString(),
+                            "R\$ " + model.productPrice.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -161,7 +135,7 @@ class DashboardController extends GetxController {
                           children: <Widget>[
                             TextFieldSpinner(
                                 id: model.id.toString(),
-                                initValue: 0,
+                                initValue: model.productQtd,
                                 minValue: 0,
                                 maxValue: 99,
                                 step: 1,
@@ -175,14 +149,18 @@ class DashboardController extends GetxController {
                                   size: 32,
                                   color: Colors.green,
                                 ),
-                                onChange: (id, e) {
-                                  print(model.title + ' - id:: $id - cont: $e');
-                                  myCart.saveItem(CartItemsModel(
-                                      productId: model.id,
-                                      productName: model.title,
-                                      productPrice: model.price,
-                                      productImage: model.image,
+                                onChange: (id, e) async {
+                                  print(model.productName +
+                                      ' - id:: $id - cont: $e');
+                                  await myCart.saveItem(CartItemsModel(
+                                      productId: model.productId,
+                                      productName: model.productName,
+                                      productPrice: model.productPrice,
+                                      productImage: model.productImage,
                                       productQtd: e));
+                                  if (e == 0) {
+                                    refreshLocalList();
+                                  }
                                 })
                           ],
                         )
@@ -207,19 +185,19 @@ class DashboardController extends GetxController {
         pinned: true,
         titleSpacing: 0,
         actionsIconTheme: IconThemeData(opacity: 0.0),
-        title: myTitle('Todos os Produtos'),
+        title: myTitle('Meu Carrinho'),
       ),
     ];
   }
 
-  Widget myBody() {
-    Future<Null> _refreshLocalList() async {
-      this.widgetListViewProdutos = loadding(92, 92);
-      update();
-      getAllProducts();
-      print('refreshing atualizando...');
-    }
+  Future<Null> refreshLocalList() async {
+    this.widgetListViewProdutos = loadding(92, 92);
+    print('refreshing atualizando...');
+    update();
+    getAllProducts();
+  }
 
+  Widget myBody() {
     return RefreshIndicator(
       child: SingleChildScrollView(
         child: Column(
@@ -230,7 +208,7 @@ class DashboardController extends GetxController {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
-                    child: GetBuilder<DashboardController>(
+                    child: GetBuilder<CarrinhoController>(
                       builder: (r) => this.widgetListViewProdutos,
                     ),
                   ),
@@ -241,7 +219,7 @@ class DashboardController extends GetxController {
           ],
         ),
       ),
-      onRefresh: _refreshLocalList,
+      onRefresh: refreshLocalList,
     );
   }
 

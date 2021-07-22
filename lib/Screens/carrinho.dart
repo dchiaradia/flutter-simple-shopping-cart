@@ -2,13 +2,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Controllers/dashboardController.dart';
+import '../Controllers/carrinhoController.dart';
 
-class DashboardPage extends GetWidget {
-  final DashboardController controller = Get.put(DashboardController());
+class CarrinhoPage extends GetWidget {
+  final CarrinhoController controller = Get.put(CarrinhoController());
 
   @override
   Widget build(BuildContext context) {
+    print('teste');
+    controller.getAllProducts();
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -17,7 +20,7 @@ class DashboardPage extends GetWidget {
         body: controller.myBody(),
       ),
       //floatingActionButton: cartButtonView(),
-      bottomNavigationBar: controller.myBottomBar(0),
+      bottomNavigationBar: controller.myBottomBar(1),
     );
   }
 }

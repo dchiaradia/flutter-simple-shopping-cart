@@ -11,7 +11,7 @@ class Cart {
   Cart();
   final banco = DB.instance;
 
-  void saveItem(CartItemsModel item) async {
+  saveItem(CartItemsModel item) async {
     //verifico se o item já foi inserido no carrinho
     final count = await banco
         .query('SELECT id FROM cartItems WHERE productId=?', [item.productId]);
@@ -19,27 +19,36 @@ class Cart {
     //se o contador de linhas for maior ou igual a 1, então ja existe
     if (count.length >= 1) {
       item.id = count[0]['id'];
-      //realizo um update
-      final idUpdate = await banco.update('cartItems', 'id', item.toMap());
-      print('linha alterada id: $idUpdate');
+
+      //agora verifico se a quantidade enviada é zero ou menor
+      if (item.productQtd! <= 0) {
+        //se for zero ou menor é para remover do BD
+        final idDelete = await banco.delete('cartItems', 'id', item.id);
+        print('item cart removido linha => $idDelete');
+      } else {
+        //se já tiver registro - realizo um update
+        final idUpdate = await banco.update('cartItems', 'id', item.toMap());
+        print('item cart alterado linha => $idUpdate');
+      }
     } else {
+      if (item.productQtd! <= 0) {
+        return;
+      }
       //caso não tenha sido inserido, faço o insert
       final idInsert = await banco.insert('cartItems', item.toMap());
-      print('linha inserida id: $idInsert');
+      print('item cart adicionado linha => $idInsert');
     }
     print(item.toJson());
   }
 
-  Future<List<ProductsModel>> getAllProducts() async {
-    var baseNudeUrl = apiOptions["baseNudeUrl"];
+  Future<List<CartItemsModel>> getProducts() async {
+    final result =
+        await banco.query('SELECT * FROM cartItems WHERE pedidoId is Null', []);
 
-    var request = http.Request('GET', Uri.http(baseNudeUrl!, "/products"));
-    http.StreamedResponse response = await request.send();
+    //var json = jsonDecode(await response.stream.bytesToString());
 
-    var json = jsonDecode(await response.stream.bytesToString());
-
-    List<ProductsModel> retorno = List<ProductsModel>.from(
-        json.map((model) => ProductsModel.fromJson(model)));
+    List<CartItemsModel> retorno = List<CartItemsModel>.from(
+        result.map((model) => CartItemsModel.fromJson(model)));
 
     return retorno;
   }
