@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:novo/Models/cartItems.dart';
 
 import '../Controllers/productsController.dart';
+import '../Controllers/cartController.dart';
 import '../Models/productsModel.dart';
 import '../Widgets/textFieldSpinner.dart';
 
 class DashboardController extends GetxController {
   late List<ProductsModel> listaProdutos;
+  Cart myCart = new Cart();
   late Widget widgetListViewProdutos = loadding(92, 92);
   @override
   void onInit() {
@@ -160,7 +163,13 @@ class DashboardController extends GetxController {
                                   color: Colors.green,
                                 ),
                                 onChange: (id, e) {
-                                  print('id:: $id - cont: $e');
+                                  print(model.title + ' - id:: $id - cont: $e');
+                                  myCart.saveItem(CartItemsModel(
+                                      productId: model.id,
+                                      productName: model.title,
+                                      productPrice: model.price,
+                                      productImage: model.image,
+                                      productQtd: e));
                                 })
                           ],
                         )
