@@ -38,7 +38,6 @@ class Cart {
       final idInsert = await banco.insert('cartItems', item.toMap());
       print('item cart adicionado linha => $idInsert');
     }
-    print(item.toJson());
   }
 
   Future<List<CartItemsModel>> getProducts() async {

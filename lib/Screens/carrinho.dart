@@ -9,7 +9,6 @@ class CarrinhoPage extends GetWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('teste');
     controller.getAllProducts();
 
     return Scaffold(

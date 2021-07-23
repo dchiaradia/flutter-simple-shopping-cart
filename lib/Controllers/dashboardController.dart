@@ -175,9 +175,9 @@ class DashboardController extends GetxController {
                                   size: 32,
                                   color: Colors.green,
                                 ),
-                                onChange: (id, e) {
+                                onChange: (id, e) async {
                                   print(model.title + ' - id:: $id - cont: $e');
-                                  myCart.saveItem(CartItemsModel(
+                                  await myCart.saveItem(CartItemsModel(
                                       productId: model.id,
                                       productName: model.title,
                                       productPrice: model.price,

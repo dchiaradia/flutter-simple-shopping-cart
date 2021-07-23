@@ -1,4 +1,6 @@
 //import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -40,12 +42,13 @@ class CarrinhoController extends GetxController {
     super.onClose();
   }
 
-  void getAllProducts() async {
-    print('atualizando carrinho');
+  getAllProducts() async {
+    print('atualizando carrinho...');
     listaItens = await myCart.getProducts();
+    update();
     widgetListViewProdutos = await listViewProducts(listaItens);
     update();
-    print('carrinho atualizado');
+    print('carrinho atualizado!');
   }
 
   Widget loadding(double height, double width) {
@@ -133,8 +136,9 @@ class CarrinhoController extends GetxController {
                         ),
                         Row(
                           children: <Widget>[
-                            TextFieldSpinner(
-                                id: model.id.toString(),
+                            new TextFieldSpinner(
+                                id: model.productId.toString(),
+                                key: UniqueKey(),
                                 initValue: model.productQtd,
                                 minValue: 0,
                                 maxValue: 99,
@@ -159,7 +163,8 @@ class CarrinhoController extends GetxController {
                                       productImage: model.productImage,
                                       productQtd: e));
                                   if (e == 0) {
-                                    refreshLocalList();
+                                    //sleep(Duration(seconds: 1));
+                                    await refreshLocalList();
                                   }
                                 })
                           ],
@@ -192,9 +197,10 @@ class CarrinhoController extends GetxController {
 
   Future<Null> refreshLocalList() async {
     this.widgetListViewProdutos = loadding(92, 92);
-    print('refreshing atualizando...');
     update();
-    getAllProducts();
+    print('Iniciando atualização forçada...');
+    await getAllProducts();
+    update();
   }
 
   Widget myBody() {
