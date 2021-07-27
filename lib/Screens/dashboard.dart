@@ -17,6 +17,7 @@ class DashboardPage extends GetWidget {
         body: controller.myBody(),
       ),
       //floatingActionButton: cartButtonView(),
+      floatingActionButton: controller.myCardPriceCart(),
       bottomNavigationBar: controller.myBottomBar(0),
     );
   }

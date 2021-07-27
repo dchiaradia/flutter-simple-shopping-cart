@@ -75,7 +75,12 @@ class DB {
   // O valor de retorno é o id da linha inserida.
   Future<int> insert(table, Map<String, dynamic> row) async {
     Database? db = await instance.database;
-    return await db!.insert(table, row);
+    try {
+      return await db!.insert(table, row);
+    } on Exception catch (_) {
+      print('Error ao inserir');
+      return 0;
+    }
   }
 
   // Todas as linhas são retornadas como uma lista de mapas, onde cada mapa é
@@ -89,7 +94,7 @@ class DB {
   Future<List<Map<String, dynamic>>> query(query, where) async {
     Database? db = await instance.database;
     if (where == "" || where == null) {
-      return db!.rawQuery(query);
+      return await db!.rawQuery(query);
     } else {
       return await db!.rawQuery(query, where);
     }
@@ -119,5 +124,16 @@ class DB {
   Future<int> delete(table, columnId, value) async {
     Database? db = await instance.database;
     return await db!.delete(table, where: '$columnId = ?', whereArgs: [value]);
+  }
+
+  Future<int> rawDelete(table, [columnId, value]) async {
+    Database? db = await instance.database;
+
+    if (value == "" || value == null) {
+      return await db!.rawDelete('DELETE FROM $table');
+    } else {
+      return await db!
+          .rawDelete('DELETE FROM $table WHERE $columnId =? ', value);
+    }
   }
 }

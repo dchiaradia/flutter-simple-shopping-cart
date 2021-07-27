@@ -2,6 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:novo/Screens/dashboard.dart';
+import 'package:novo/Screens/carrinho.dart';
 
 Widget bottomBar(index) {
   return BottomNavigationBar(
@@ -23,9 +25,11 @@ Widget bottomBar(index) {
     selectedItemColor: Colors.amber[800],
     onTap: (int index) {
       if (index == 0) {
-        Get.toNamed('/dashboard');
+        //Get.toNamed('/dashboard');
+        Get.offAll(DashboardPage());
       } else if (index == 1) {
-        Get.toNamed('/carrinho').reactive;
+        //Get.toNamed('/carrinho');
+        Get.offAll(CarrinhoPage());
       }
     },
   );

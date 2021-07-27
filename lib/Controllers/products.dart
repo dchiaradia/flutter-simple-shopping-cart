@@ -1,7 +1,5 @@
 import '../Models/productsModel.dart';
-import '../Models/productsModel.dart';
-import '../Models/productsModel.dart';
-import '../Models/productsModel.dart';
+
 import 'db.dart';
 import 'api.dart';
 
@@ -12,8 +10,8 @@ class Products {
 
   Future<void> populate() async {
     //apago todos os produtos da tabela
-    banco..query('delete from products', '');
-    print('Tabela de produtos limpa!');
+    var qtdExcluida = await banco.rawDelete('products', '', '');
+    print('Tabela de produtos limpa! ($qtdExcluida)');
 
     Api api = new Api();
 
@@ -25,7 +23,7 @@ class Products {
       await banco.insert('products', element.toMap());
     });
 
-    print('Tabela de produtos populada!');
+    print('Tabela de produtos populada!!');
   }
 
   Future<List<ProductsModel>> getAllProducts() async {

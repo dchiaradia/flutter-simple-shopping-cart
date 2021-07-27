@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Screens/splashScreen.dart';
-import 'Screens/dashboard2.dart';
+import 'Screens/dashboard.dart';
 
 import 'Screens/carrinho.dart';
 
@@ -29,9 +29,11 @@ void main() => runApp(GetMaterialApp(
           page: () => SplashPage(),
         ),
         GetPage(
-          name: '/dashboard',
-          page: () => DashboardPage(),
-        ),
+            name: '/dashboard',
+            page: () => DashboardPage(),
+            maintainState: false,
+            preventDuplicates: true,
+            transition: Transition.rightToLeftWithFade),
         GetPage(
           name: '/carrinho',
           page: () => CarrinhoPage(),

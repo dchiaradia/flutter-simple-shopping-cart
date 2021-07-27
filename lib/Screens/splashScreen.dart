@@ -6,17 +6,20 @@ import '../Controllers/products.dart';
 class SplashPage extends StatelessWidget {
   String appName = 'APP NAME';
   int splashTime = 5;
+
   SplashPage() {
     startTimeout();
   }
+
   startTimeout() async {
+    //executo a funcao de popular a tabela de produtos, depois redireciono para pagina de dashboard
+    Products produto = new Products();
+    await produto.populate();
     return Timer(Duration(seconds: splashTime), changeScreen);
   }
 
-  changeScreen() async {
-    Products produto = new Products();
-    //executo a funcao de popular a tabela de produtos, depois redireciono para pagina de dashboard
-    produto.populate().then((value) => Get.toNamed('/dashboard'));
+  changeScreen() {
+    Get.toNamed('/dashboard');
   }
 
   @override

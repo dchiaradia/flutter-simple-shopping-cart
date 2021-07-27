@@ -10,6 +10,7 @@ import 'db.dart';
 class Cart {
   Cart();
   final banco = DB.instance;
+  double cartPrice = 0;
 
   saveItem(CartItemsModel item) async {
     //verifico se o item já foi inserido no carrinho
@@ -50,5 +51,24 @@ class Cart {
         result.map((model) => CartItemsModel.fromJson(model)));
 
     return retorno;
+  }
+
+  Future<double> getCartPrice() async {
+    this.cartPrice = 0;
+    //busco o preço atual do carrinho
+    final result = await banco.query(
+        "SELECT SUM(productPrice*productQtd) as valor FROM cartItems WHERE pedidoID is null ",
+        []);
+
+    if (result.length >= 1) {
+      if (result[0]['valor'] == null) {
+        this.cartPrice = 0;
+      } else {
+        this.cartPrice = result[0]['valor'];
+      }
+      return this.cartPrice.toPrecision(2);
+    }
+    //retorno o preço do carrinho
+    return 0;
   }
 }
