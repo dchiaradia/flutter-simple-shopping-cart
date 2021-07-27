@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../Controllers/products.dart';
 
 class SplashPage extends StatelessWidget {
   String appName = 'APP NAME';
@@ -13,7 +14,9 @@ class SplashPage extends StatelessWidget {
   }
 
   changeScreen() async {
-    Get.toNamed('/dashboard');
+    Products produto = new Products();
+    //executo a funcao de popular a tabela de produtos, depois redireciono para pagina de dashboard
+    produto.populate().then((value) => Get.toNamed('/dashboard'));
   }
 
   @override

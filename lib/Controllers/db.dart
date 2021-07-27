@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 class DB {
   static final _databaseName = "shoppingCart.db";
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
 
   // torna esta classe singleton
   DB._privateConstructor();
@@ -31,6 +31,17 @@ class DB {
   //Código SQL para criar o banco de dados e a tabela
   Future _onCreate(Database db, int version) async {
     await db.execute('''
+          CREATE TABLE products (
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            price REAL NOT NULL,
+            description TEXT NOT NULL,            
+            category TEXT NOT NULL,            
+            image TEXT NOT NULL
+          )
+          ''');
+
+    await db.execute('''
           CREATE TABLE cartItems (
             id INTEGER PRIMARY KEY,
             productId INTEGER,
@@ -51,7 +62,9 @@ class DB {
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
     await db.execute("DROP TABLE IF EXISTS cartItems");
-    await db.execute("DROP TABLE IF EXISTS PRIMARY");
+    await db.execute("DROP TABLE IF EXISTS pedidos");
+    await db.execute("DROP TABLE IF EXISTS products");
+
     _onCreate(db, newVersion);
   }
 
@@ -75,7 +88,11 @@ class DB {
   //executa uma query especifica
   Future<List<Map<String, dynamic>>> query(query, where) async {
     Database? db = await instance.database;
-    return await db!.rawQuery(query, where);
+    if (where == "" || where == null) {
+      return db!.rawQuery(query);
+    } else {
+      return await db!.rawQuery(query, where);
+    }
   }
 
   // T0dos os métodos : inserir, consultar, atualizar e excluir,

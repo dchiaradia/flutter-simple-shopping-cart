@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:novo/Models/cartItems.dart';
 import '../Controllers/defaultController.dart';
 
-import '../Controllers/productsController.dart';
+import '../Controllers/products.dart';
 import '../Controllers/cartController.dart';
 import '../Models/productsModel.dart';
 import '../Widgets/textFieldSpinner.dart';
@@ -42,18 +42,10 @@ class DashboardController extends GetxController {
 
   void getAllProducts() async {
     print('bucando produtos');
-    final produtos = Products();
-    //List<ProductsModel> retorno = await produtos.getAllProducts();
-
-    if (!listaProdutos.isEmpty) {
-      widgetListViewProdutos = listViewProducts(listaProdutos);
-      return;
-    }
-
+    Products produtos = Products();
     listaProdutos = await produtos.getAllProducts();
     widgetListViewProdutos = listViewProducts(listaProdutos);
     update();
-    //this.getAllProducts();
   }
 
   Widget loadding(double height, double width) {

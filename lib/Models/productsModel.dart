@@ -33,4 +33,15 @@ class ProductsModel {
     data['image'] = this.image;
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'title': this.title,
+      'price': this.price,
+      'description': this.description,
+      'category': this.category,
+      'image': this.image
+    };
+  }
 }
