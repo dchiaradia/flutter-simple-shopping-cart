@@ -4,10 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:novo/Screens/Dashboard/View/dashboard.dart';
 import 'package:novo/Screens/Cart/View/carrinho.dart';
+import 'package:novo/Screens/Pedidos/View/pedido.dart';
 
 Widget bottomBar(index) {
   return BottomNavigationBar(
-    items: const <BottomNavigationBarItem>[
+    type: BottomNavigationBarType.fixed,
+    currentIndex: index,
+    selectedItemColor: Colors.amber[800],
+    unselectedItemColor: Colors.grey,
+    items: <BottomNavigationBarItem>[
       BottomNavigationBarItem(
         icon: Icon(Icons.home),
         label: 'Home',
@@ -17,12 +22,14 @@ Widget bottomBar(index) {
         label: 'Carrinho',
       ),
       BottomNavigationBarItem(
+        icon: Icon(Icons.list_outlined),
+        label: 'Pedidos',
+      ),
+      BottomNavigationBarItem(
         icon: Icon(Icons.person),
         label: 'Profile',
       ),
     ],
-    currentIndex: index,
-    selectedItemColor: Colors.amber[800],
     onTap: (int index) {
       if (index == 0) {
         //Get.toNamed('/dashboard');
@@ -30,7 +37,10 @@ Widget bottomBar(index) {
       } else if (index == 1) {
         //Get.toNamed('/carrinho');
         Get.offAll(CarrinhoPage());
+      } else if (index == 2) {
+        Get.offAll(PedidoPage());
       }
+      print(index);
     },
   );
 }
