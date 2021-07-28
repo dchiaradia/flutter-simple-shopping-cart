@@ -3,16 +3,20 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:novo/Controllers/products.dart';
 import 'package:novo/Models/cartItems.dart';
+import 'package:novo/Models/productsModel.dart';
 
 //import '../Controllers/productsController.dart';
 import '../../../Controllers/defaultController.dart';
 import '../../../Controllers/cartController.dart';
-import '../../../Models/productsModel.dart';
+
 import '../../../Widgets/textFieldSpinner.dart';
+import '../../ProductDetail/View/productDetail.dart';
 
 class CarrinhoController extends GetxController {
   late List<CartItemsModel> listaItens;
@@ -116,108 +120,128 @@ class CarrinhoController extends GetxController {
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return listViewProductsItem(myList[index]);
+          return listViewProductsItem(myList[index], context);
         },
       ),
     );
   }
 
-  Widget listViewProductsItem(model) {
+  Widget listViewProductsItem(model, BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 0),
-      //height: 250,
-      width: Get.size.width - 10,
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),
-            child: Column(
+        margin: EdgeInsets.only(bottom: 0),
+        //height: 250,
+        width: Get.size.width - 10,
+        child: GestureDetector(
+            child: Stack(
+              alignment: Alignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(
-                                left: 0, top: 0, right: 0, bottom: 0),
-                            child: CachedNetworkImage(
-                                imageUrl: model.productImage,
-                                height: 92,
-                                width: 92)),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: Get.size.width * 0.6,
-                          child: Text(
-                            model.productName,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.black),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                  padding: EdgeInsets.only(
+                                      left: 0, top: 0, right: 0, bottom: 0),
+                                  child: CachedNetworkImage(
+                                      imageUrl: model.productImage,
+                                      height: 92,
+                                      width: 92)),
+                            ],
                           ),
-                        ),
-                        Container(
-                          width: Get.size.width * 0.6,
-                          child: Text(
-                            "R\$ " + model.productPrice.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.black),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                width: Get.size.width * 0.6,
+                                child: Text(
+                                  model.productName,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              Container(
+                                width: Get.size.width * 0.6,
+                                child: Text(
+                                  "R\$ " + model.productPrice.toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  new TextFieldSpinner(
+                                      id: model.productId.toString(),
+                                      key: UniqueKey(),
+                                      initValue: model.productQtd,
+                                      minValue: 0,
+                                      maxValue: 99,
+                                      step: 1,
+                                      removeIcon: const Icon(
+                                        Icons.remove_circle,
+                                        size: 32,
+                                        color: Colors.red,
+                                      ),
+                                      addIcon: const Icon(
+                                        Icons.add_circle,
+                                        size: 32,
+                                        color: Colors.green,
+                                      ),
+                                      onChange: (id, e) async {
+                                        print(model.productName +
+                                            ' - id:: $id - cont: $e');
+                                        await myCart.saveItem(CartItemsModel(
+                                            productId: model.productId,
+                                            productName: model.productName,
+                                            productPrice: model.productPrice,
+                                            productImage: model.productImage,
+                                            productQtd: e));
+                                        if (e == 0) {
+                                          //sleep(Duration(seconds: 1));
+                                          await refreshLocalList();
+                                        }
+                                        refreshCartPrice();
+                                      })
+                                ],
+                              )
+                            ],
                           ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            new TextFieldSpinner(
-                                id: model.productId.toString(),
-                                key: UniqueKey(),
-                                initValue: model.productQtd,
-                                minValue: 0,
-                                maxValue: 99,
-                                step: 1,
-                                removeIcon: const Icon(
-                                  Icons.remove_circle,
-                                  size: 32,
-                                  color: Colors.red,
-                                ),
-                                addIcon: const Icon(
-                                  Icons.add_circle,
-                                  size: 32,
-                                  color: Colors.green,
-                                ),
-                                onChange: (id, e) async {
-                                  print(model.productName +
-                                      ' - id:: $id - cont: $e');
-                                  await myCart.saveItem(CartItemsModel(
-                                      productId: model.productId,
-                                      productName: model.productName,
-                                      productPrice: model.productPrice,
-                                      productImage: model.productImage,
-                                      productQtd: e));
-                                  if (e == 0) {
-                                    //sleep(Duration(seconds: 1));
-                                    await refreshLocalList();
-                                  }
-                                  refreshCartPrice();
-                                })
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      const Divider(),
+                    ],
+                  ),
                 ),
-                const Divider(),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+            onTap: () async {
+              Products produto = Products();
+              List<ProductsModel> productModel =
+                  await produto.find(model.productId);
+
+              ProductsModel modelo = productModel[0];
+              showCupertinoModalBottomSheet(
+                expand: true,
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => ProductDetailSheet(
+                    modelo.category!,
+                    modelo.title!,
+                    modelo.description!,
+                    modelo.price!,
+                    modelo.image!),
+              );
+              update();
+            }));
   }
 
   myHeader(bool innerBoxIsScrolled) {

@@ -32,6 +32,7 @@ dependencies:
   http: ^0.13.3
   http2: ^2.0.0
   cached_network_image: ^3.1.0
+  modal_bottom_sheet: ^2.0.0
 
 dev_dependencies:
   flutter_test:

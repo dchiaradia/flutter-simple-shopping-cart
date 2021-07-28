@@ -26,6 +26,17 @@ class Products {
     print('Tabela de produtos populada!!');
   }
 
+  Future<List<ProductsModel>> find(int id) async {
+    //busco todos os produtos do banco de dados ordenados por title
+    var retorno = await banco.query('SELECT * FROM products WHERE id=?', [id]);
+
+    //converto os produtos em uma lista do tipo de produtos
+    List<ProductsModel> listaProdutos =
+        List<ProductsModel>.from(retorno.map((e) => ProductsModel.fromJson(e)));
+
+    return listaProdutos;
+  }
+
   Future<List<ProductsModel>> getAllProducts() async {
     print('Buscando produtos do banco de dados');
 

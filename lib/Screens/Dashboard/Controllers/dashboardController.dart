@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +13,7 @@ import '../../../Controllers/products.dart';
 import '../../../Controllers/cartController.dart';
 import '../../../Models/productsModel.dart';
 import '../../../Widgets/textFieldSpinner.dart';
+import '../../ProductDetail/View/productDetail.dart';
 
 class DashboardController extends GetxController {
   late List<ProductsModel> listaProdutos = List<ProductsModel>.empty();
@@ -134,13 +136,13 @@ class DashboardController extends GetxController {
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return listViewProductsItem(myList[index]);
+          return listViewProductsItem(myList[index], context);
         },
       ),
     );
   }
 
-  Widget listViewProductsItem(model) {
+  Widget listViewProductsItem(model, BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 0),
       //height: 250,
@@ -172,74 +174,93 @@ class DashboardController extends GetxController {
                         color: Colors.black),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.only(
-                                left: 0, top: 0, right: 0, bottom: 0),
-                            child: CachedNetworkImage(
-                                imageUrl: model.image, height: 92, width: 92)),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: Get.size.width * 0.6,
-                          child: Text(
-                            model.description,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                                color: Colors.grey),
+                GestureDetector(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.only(
+                                  left: 0, top: 0, right: 0, bottom: 0),
+                              child: CachedNetworkImage(
+                                  imageUrl: model.image,
+                                  height: 92,
+                                  width: 92)),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            width: Get.size.width * 0.6,
+                            child: Text(
+                              model.description,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: Get.size.width * 0.6,
-                          child: Text(
-                            "R\$ " + model.price.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.black),
+                          Container(
+                            width: Get.size.width * 0.6,
+                            child: Text(
+                              "R\$ " + model.price.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.black),
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            TextFieldSpinner(
-                                id: model.id.toString(),
-                                initValue: 0,
-                                minValue: 0,
-                                maxValue: 99,
-                                step: 1,
-                                removeIcon: const Icon(
-                                  Icons.remove_circle,
-                                  size: 32,
-                                  color: Colors.red,
-                                ),
-                                addIcon: const Icon(
-                                  Icons.add_circle,
-                                  size: 32,
-                                  color: Colors.green,
-                                ),
-                                onChange: (id, e) async {
-                                  print(model.title + ' - id:: $id - cont: $e');
-                                  await myCart.saveItem(CartItemsModel(
-                                      productId: model.id,
-                                      productName: model.title,
-                                      productPrice: model.price,
-                                      productImage: model.image,
-                                      productQtd: e));
-                                  refreshCartPrice();
-                                })
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
+                          Row(
+                            children: <Widget>[
+                              TextFieldSpinner(
+                                  id: model.id.toString(),
+                                  initValue: 0,
+                                  minValue: 0,
+                                  maxValue: 99,
+                                  step: 1,
+                                  removeIcon: const Icon(
+                                    Icons.remove_circle,
+                                    size: 32,
+                                    color: Colors.red,
+                                  ),
+                                  addIcon: const Icon(
+                                    Icons.add_circle,
+                                    size: 32,
+                                    color: Colors.green,
+                                  ),
+                                  onChange: (id, e) async {
+                                    print(
+                                        model.title + ' - id:: $id - cont: $e');
+                                    await myCart.saveItem(CartItemsModel(
+                                        productId: model.id,
+                                        productName: model.title,
+                                        productPrice: model.price,
+                                        productImage: model.image,
+                                        productQtd: e));
+                                    refreshCartPrice();
+                                  })
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    showCupertinoModalBottomSheet(
+                      expand: true,
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => ProductDetailSheet(
+                          model.category,
+                          model.title,
+                          model.description,
+                          model.price,
+                          model.image),
+                    );
+                    update();
+                  },
                 ),
                 const Divider(),
               ],
