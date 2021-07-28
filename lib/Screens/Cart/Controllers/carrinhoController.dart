@@ -56,6 +56,16 @@ class CarrinhoController extends GetxController {
     print('carrinho atualizado!');
   }
 
+  void makePedido() async {
+    await myCart.makePedido();
+    await getAllProducts();
+    refreshCartPrice();
+    update();
+    Get.snackbar("Pedidos Realizado",
+        "Pedido realizado com sucesso! Em breve você receberá seu pedido.",
+        backgroundColor: Colors.black, colorText: Colors.white);
+  }
+
   void refreshCartPrice() async {
     print('atulizando preço do carrinho');
     double cartPrice = await myCart.getCartPrice();
@@ -75,17 +85,27 @@ class CarrinhoController extends GetxController {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Spacer(flex: 1),
-          Icon(
-            Icons.shopping_basket_outlined,
-            color: Colors.white,
-          ),
           Spacer(),
           Text(
             "R\$ ${cartPrice}",
             style: TextStyle(color: Colors.white, fontSize: 22),
           ),
-          Spacer(flex: 2),
+          Spacer(flex: 3),
+          ElevatedButton.icon(
+              onPressed: () {
+                makePedido();
+              },
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.green)),
+              icon: Icon(
+                Icons.add_task,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Finalizar Pedido',
+                style: TextStyle(color: Colors.white),
+              )),
+          Spacer(flex: 1),
         ],
       ),
     );

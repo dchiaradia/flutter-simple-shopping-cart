@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 class DB {
   static final _databaseName = "shoppingCart.db";
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 3;
 
   // torna esta classe singleton
   DB._privateConstructor();
@@ -55,7 +55,8 @@ class DB {
 
     await db.execute('''
           CREATE TABLE pedidos (
-            id INTEGER PRIMARY KEY            
+            id INTEGER PRIMARY KEY  ,
+            dtPedido INTEGER NOT NULL
           )
           ''');
   }

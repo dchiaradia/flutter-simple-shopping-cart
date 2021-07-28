@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
-import '../Services/api.dart';
-import '../Models/cartItems.dart';
-import '../Models/productsModel.dart';
+import 'package:novo/Models/pedidosModel.dart';
 
-import 'package:http/http.dart' as http;
+import '../Models/cartItems.dart';
+
 import 'dart:convert';
 import 'db.dart';
 
@@ -70,5 +69,27 @@ class Cart {
     }
     //retorno o preço do carrinho
     return 0;
+  }
+
+  Future<int> makePedido() async {
+    //busco o valor do carrinho
+    double cartValue = await this.getCartPrice();
+
+    if (cartValue == 0) {
+      //se o valor do carrinho for zero retorno, pois não tem itens
+      return 0;
+    }
+
+    //caso o valor do carrinho seja superior a zero, tenho que gerar o pedido gravar os itens.
+    PedidosModel pedido =
+        PedidosModel(dtPedido: new DateTime.now().millisecondsSinceEpoch);
+
+    final idInsert = await banco.insert('pedidos', pedido.toMap());
+    print('Pedido Criado : ${idInsert}');
+
+    await banco.query(
+        'UPDATE cartItems SET pedidoID=? WHERE pedidoID is Null', [idInsert]);
+
+    return idInsert;
   }
 }
