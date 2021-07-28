@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'api.dart';
+import '../Services/api.dart';
 import '../Models/cartItems.dart';
 import '../Models/productsModel.dart';
 

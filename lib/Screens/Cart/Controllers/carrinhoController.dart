@@ -9,16 +9,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:novo/Models/cartItems.dart';
 
 //import '../Controllers/productsController.dart';
-import '../Controllers/defaultController.dart';
-import '../Controllers/cartController.dart';
-import '../Models/productsModel.dart';
-import '../Widgets/textFieldSpinner.dart';
+import '../../../Controllers/defaultController.dart';
+import '../../../Controllers/cartController.dart';
+import '../../../Models/productsModel.dart';
+import '../../../Widgets/textFieldSpinner.dart';
 
 class CarrinhoController extends GetxController {
   late List<CartItemsModel> listaItens;
   Cart myCart = new Cart();
   late Widget widgetListViewProdutos = loadding(92, 92);
-
+  late Widget myCartPrice = Container();
   Widget myBottomBar(index) {
     return bottomBar(index);
   }
@@ -33,6 +33,7 @@ class CarrinhoController extends GetxController {
   void onReady() {
     print('onReady');
     this.getAllProducts();
+    refreshCartPrice();
     super.onReady();
   }
 
@@ -49,6 +50,42 @@ class CarrinhoController extends GetxController {
     widgetListViewProdutos = await listViewProducts(listaItens);
     update();
     print('carrinho atualizado!');
+  }
+
+  void refreshCartPrice() async {
+    print('atulizando preço do carrinho');
+    double cartPrice = await myCart.getCartPrice();
+
+    if (cartPrice == 0) {
+      myCartPrice = Container();
+      update();
+      return;
+    }
+
+    myCartPrice = Container(
+      height: 50,
+      width: Get.size.width * 0.90,
+      alignment: Alignment.center,
+      color: Colors.blue,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Spacer(flex: 1),
+          Icon(
+            Icons.shopping_basket_outlined,
+            color: Colors.white,
+          ),
+          Spacer(),
+          Text(
+            "R\$ ${cartPrice}",
+            style: TextStyle(color: Colors.white, fontSize: 22),
+          ),
+          Spacer(flex: 2),
+        ],
+      ),
+    );
+    update();
   }
 
   Widget loadding(double height, double width) {
@@ -166,6 +203,7 @@ class CarrinhoController extends GetxController {
                                     //sleep(Duration(seconds: 1));
                                     await refreshLocalList();
                                   }
+                                  refreshCartPrice();
                                 })
                           ],
                         )
@@ -226,6 +264,18 @@ class CarrinhoController extends GetxController {
         ),
       ),
       onRefresh: refreshLocalList,
+    );
+  }
+
+  Widget myCardPriceCart() {
+    return GestureDetector(
+      child: GetBuilder<CarrinhoController>(
+        builder: (r) => this.myCartPrice,
+      ),
+      onTap: () {
+        print('clicou');
+        refreshCartPrice();
+      },
     );
   }
 

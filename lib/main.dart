@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'Screens/splashScreen.dart';
-import 'Screens/dashboard.dart';
+import 'Screens/splashScreen/View/splashScreen.dart';
+import 'Screens/Dashboard/View/dashboard.dart';
 
-import 'Screens/carrinho.dart';
+import 'Screens/Cart/View/carrinho.dart';
 
 void main() => runApp(GetMaterialApp(
       debugShowCheckedModeBanner: false,

@@ -2,8 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:novo/Screens/dashboard.dart';
-import 'package:novo/Screens/carrinho.dart';
+import 'package:novo/Screens/Dashboard/View/dashboard.dart';
+import 'package:novo/Screens/Cart/View/carrinho.dart';
 
 Widget bottomBar(index) {
   return BottomNavigationBar(

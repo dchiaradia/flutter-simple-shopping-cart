@@ -1,3 +1,6 @@
+import '../Controllers/db.dart';
+import '../Services/api.dart';
+
 class ProductsModel {
   int? id;
   String? title;
@@ -5,6 +8,8 @@ class ProductsModel {
   String? description;
   String? category;
   String? image;
+
+  final banco = DB.instance;
 
   ProductsModel(
       {this.id,

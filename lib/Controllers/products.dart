@@ -1,7 +1,7 @@
 import '../Models/productsModel.dart';
 
 import 'db.dart';
-import 'api.dart';
+import '../Services/api.dart';
 
 class Products {
   Products();

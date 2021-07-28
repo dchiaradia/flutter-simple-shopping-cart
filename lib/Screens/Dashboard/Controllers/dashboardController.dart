@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:novo/Models/cartItems.dart';
-import '../Controllers/defaultController.dart';
+import '../../../Controllers/defaultController.dart';
 
-import '../Controllers/products.dart';
-import '../Controllers/cartController.dart';
-import '../Models/productsModel.dart';
-import '../Widgets/textFieldSpinner.dart';
+import '../../../Controllers/products.dart';
+import '../../../Controllers/cartController.dart';
+import '../../../Models/productsModel.dart';
+import '../../../Widgets/textFieldSpinner.dart';
 
 class DashboardController extends GetxController {
   late List<ProductsModel> listaProdutos = List<ProductsModel>.empty();
