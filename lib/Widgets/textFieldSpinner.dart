@@ -12,6 +12,9 @@ class TextFieldSpinner extends StatefulWidget {
   final Icon removeIcon;
   final Icon addIcon;
   final String id;
+  final double txtWidth;
+  final double txtHeight;
+  final bool borderSide;
 
   const TextFieldSpinner({
     Key? key,
@@ -19,10 +22,13 @@ class TextFieldSpinner extends StatefulWidget {
     required this.initValue,
     required this.minValue,
     required this.maxValue,
-    required this.step,
+    this.step = 1,
     required this.onChange,
     required this.removeIcon,
     required this.addIcon,
+    this.txtWidth = 65,
+    this.txtHeight = 32,
+    this.borderSide = true,
   }) : super(key: key);
 
   @override
@@ -83,8 +89,8 @@ class TextFieldSpinnerState extends State<TextFieldSpinner> {
             },
           ),
           SizedBox(
-              width: 65,
-              height: 32,
+              width: widget.txtWidth,
+              height: widget.txtHeight,
               child: TextFormField(
                 controller: txtContador,
                 textAlign: TextAlign.center,
@@ -93,9 +99,12 @@ class TextFieldSpinnerState extends State<TextFieldSpinner> {
                 maxLength: 2,
                 decoration: InputDecoration(
                   counterText: "",
-                  contentPadding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                  contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
+                      borderSide: widget.borderSide == false
+                          ? BorderSide.none
+                          : BorderSide(style: BorderStyle.solid),
+                      borderRadius: BorderRadius.circular(5.0)),
                 ),
                 onEditingComplete: () async {
                   onChange();

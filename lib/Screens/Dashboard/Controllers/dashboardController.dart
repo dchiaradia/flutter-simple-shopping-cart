@@ -97,7 +97,7 @@ class DashboardController extends GetxController {
           GridView.builder(
               padding: EdgeInsets.all(3.0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
                 childAspectRatio: 0.65,
@@ -215,6 +215,8 @@ class DashboardController extends GetxController {
                                   minValue: 0,
                                   maxValue: 99,
                                   step: 1,
+                                  txtHeight: 32,
+                                  txtWidth: 65,
                                   removeIcon: const Icon(
                                     Icons.remove_circle,
                                     size: 32,
@@ -272,7 +274,7 @@ class DashboardController extends GetxController {
         margin: EdgeInsets.all(3.0),
         child: Column(
           children: [
-            Text(model.title.toString().capitalizeFirst!),
+            Text(model.title.toString().capitalizeFirst!, maxLines: 1),
             CachedNetworkImage(
               imageUrl: model.image,
               height: 92,
@@ -285,14 +287,17 @@ class DashboardController extends GetxController {
                 minValue: 0,
                 maxValue: 99,
                 step: 1,
+                txtHeight: 22,
+                txtWidth: 20,
+                borderSide: false,
                 removeIcon: const Icon(
                   Icons.remove_circle,
-                  size: 32,
+                  size: 24,
                   color: Colors.red,
                 ),
                 addIcon: const Icon(
                   Icons.add_circle,
-                  size: 32,
+                  size: 24,
                   color: Colors.green,
                 ),
                 onChange: (id, e) async {

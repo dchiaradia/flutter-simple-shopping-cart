@@ -206,6 +206,8 @@ class CarrinhoController extends GetxController {
                                       minValue: 0,
                                       maxValue: 99,
                                       step: 1,
+                                      txtHeight: 32,
+                                      txtWidth: 65,
                                       removeIcon: const Icon(
                                         Icons.remove_circle,
                                         size: 32,
