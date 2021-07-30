@@ -14,11 +14,10 @@ class CarrinhoPage extends GetWidget {
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return controller.myHeader(innerBoxIsScrolled);
+          return controller.myHeader(true);
         },
         body: controller.myBody(),
       ),
-      floatingActionButton: controller.myCardPriceCart(),
       bottomNavigationBar: controller.myBottomBar(1),
     );
   }

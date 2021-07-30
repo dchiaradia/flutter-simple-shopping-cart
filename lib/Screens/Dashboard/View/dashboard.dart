@@ -9,16 +9,12 @@ class DashboardPage extends GetWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return controller.myHeader(innerBoxIsScrolled);
-        },
-        body: controller.myBody(),
-      ),
-      //floatingActionButton: cartButtonView(),
-      floatingActionButton: controller.myCardPriceCart(),
-      bottomNavigationBar: controller.myBottomBar(0),
-    );
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: controller.myHeader(true),
+          body: controller.myBody(),
+          bottomNavigationBar: controller.myBottomBar(0),
+        ));
   }
 }

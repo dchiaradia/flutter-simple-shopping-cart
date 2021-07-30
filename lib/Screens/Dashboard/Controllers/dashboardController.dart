@@ -31,13 +31,14 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     print('onInit');
+    getAllProducts();
     super.onInit();
   }
 
   @override
   void onReady() {
     print('onReady');
-    getAllProducts();
+
     refreshCartPrice();
 
     super.onReady();
@@ -90,22 +91,29 @@ class DashboardController extends GetxController {
     Products produtos = Products();
     listaProdutos = await produtos.getAllProducts();
 
-    if (typeView == 'listView') {
-      widgetListViewProdutos = listViewProducts(listaProdutos);
-    } else {
-      widgetListViewProdutos = gridViewProducts(listaProdutos);
-    }
+    widgetListViewProdutos =
+        TabBarView(physics: NeverScrollableScrollPhysics(), children: [
+      GridView.builder(
+          padding: EdgeInsets.all(4.0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
+            childAspectRatio: 0.65,
+          ),
+          itemCount: listaProdutos.length,
+          itemBuilder: (context, index) {
+            return gridViewProducsItem(listaProdutos[index], context);
+          }),
+      ListView.builder(
+          padding: EdgeInsets.all(4.0),
+          itemCount: listaProdutos.length,
+          itemBuilder: (context, index) {
+            return listViewProductsItem(listaProdutos[index], context);
+          })
+    ]);
+    print('Tab View Montado');
     update();
-  }
-
-  void changeView() {
-    if (typeView == 'listView') {
-      typeView = 'gridView';
-    } else {
-      typeView = 'listView';
-    }
-
-    getAllProducts();
   }
 
   Widget loadding(double height, double width) {
@@ -123,21 +131,6 @@ class DashboardController extends GetxController {
                 width: width,
               )
             ]),
-      ),
-    );
-  }
-
-  Widget listViewProducts(List<ProductsModel> myList) {
-    return Container(
-      margin: EdgeInsets.only(left: 0, right: 0, top: 0),
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: myList.length,
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return listViewProductsItem(myList[index], context);
-        },
       ),
     );
   }
@@ -196,6 +189,7 @@ class DashboardController extends GetxController {
                             width: Get.size.width * 0.6,
                             child: Text(
                               model.description,
+                              maxLines: 5,
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 12,
@@ -271,144 +265,98 @@ class DashboardController extends GetxController {
     );
   }
 
-  Widget gridViewProducts(List<ProductsModel> lista) {
-    return Container(
-        width: Get.size.width - 10,
-        height: Get.size.height,
-        margin: EdgeInsets.only(left: 0, right: 0, top: 0),
-        child: GridView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            padding: EdgeInsets.all(10.0),
-            gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: ((Get.size.width) / (Get.size.height)),
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0),
-            itemCount: lista.length,
-            itemBuilder: (BuildContext ctx, index) {
-              return gridViewProducsItem(lista[index]);
-            }));
-  }
-
-  Widget gridViewProducsItem(model) {
-    return Column(
-      children: [
-        Text(model.title.toString().capitalizeFirst!),
-        CachedNetworkImage(
-          imageUrl: model.image,
-          height: 92,
-          width: 92,
-        ),
-        Text('R\$ ${model.price}'),
-        TextFieldSpinner(
-            id: model.id.toString(),
-            initValue: 0,
-            minValue: 0,
-            maxValue: 99,
-            step: 1,
-            removeIcon: const Icon(
-              Icons.remove_circle,
-              size: 32,
-              color: Colors.red,
-            ),
-            addIcon: const Icon(
-              Icons.add_circle,
-              size: 32,
-              color: Colors.green,
-            ),
-            onChange: (id, e) async {
-              print(model.title + ' - id:: $id - cont: $e');
-              await myCart.saveItem(CartItemsData(
-                  productId: model.id,
-                  productName: model.title,
-                  productPrice: model.price,
-                  productImage: model.image,
-                  productQtd: e));
-              refreshCartPrice();
-            })
-      ],
-    );
-  }
-
-  myHeader(bool innerBoxIsScrolled) {
-    return <Widget>[
-      SliverAppBar(
-        floating: false,
-        //backgroundColor: Colors.red,
-        forceElevated: innerBoxIsScrolled,
-        pinned: true,
-        titleSpacing: 0,
-        actionsIconTheme: IconThemeData(opacity: 0.0),
-        title: myTitle('Todos os Produtos'),
-        //leading: IconButton(icon: Icon(Icons.read_more), onPressed: () {}),
-      ),
-    ];
-  }
-
-  Widget myBody() {
-    Future<Null> _refreshLocalList() async {
-      this.widgetListViewProdutos = loadding(92, 92);
-      update();
-      getAllProducts();
-      print('refreshing atualizando...');
-    }
-
-    return RefreshIndicator(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: GetBuilder<DashboardController>(
-                      builder: (r) => this.widgetListViewProdutos,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(),
-          ],
-        ),
-      ),
-      onRefresh: _refreshLocalList,
-    );
-  }
-
-  Widget myCardPriceCart() {
+  Widget gridViewProducsItem(model, BuildContext context) {
     return GestureDetector(
-      child: GetBuilder<DashboardController>(
-        builder: (r) => this.myCartPrice,
+      child: Column(
+        children: [
+          Text(model.title.toString().capitalizeFirst!),
+          CachedNetworkImage(
+            imageUrl: model.image,
+            height: 92,
+            width: 92,
+          ),
+          Text('R\$ ${model.price}'),
+          TextFieldSpinner(
+              id: model.id.toString(),
+              initValue: 0,
+              minValue: 0,
+              maxValue: 99,
+              step: 1,
+              removeIcon: const Icon(
+                Icons.remove_circle,
+                size: 32,
+                color: Colors.red,
+              ),
+              addIcon: const Icon(
+                Icons.add_circle,
+                size: 32,
+                color: Colors.green,
+              ),
+              onChange: (id, e) async {
+                print(model.title + ' - id:: $id - cont: $e');
+                await myCart.saveItem(CartItemsData(
+                    productId: model.id,
+                    productName: model.title,
+                    productPrice: model.price,
+                    productImage: model.image,
+                    productQtd: e));
+                refreshCartPrice();
+              })
+        ],
       ),
       onTap: () {
-        print('clicou');
-        refreshCartPrice();
+        showCupertinoModalBottomSheet(
+          expand: true,
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (context) => ProductDetailSheet(model.category, model.title,
+              model.description, model.price, model.image),
+        );
+        update();
       },
     );
   }
 
-  Row myTitle(titulo) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-          child: Center(
-              child: Text(titulo,
-                  maxLines: 1,
-                  style: TextStyle(fontSize: 22, color: Colors.white))),
-        ),
-        new IconButton(
-            icon: Icon(Icons.dashboard),
-            onPressed: () {
-              changeView();
-            })
-      ],
+  myHeader(bool innerBoxIsScrolled) {
+    return AppBar(
+      title: Text("Meus Produtos"),
+      centerTitle: true,
+      bottom: TabBar(
+        indicatorColor: Colors.white,
+        tabs: <Widget>[
+          Tab(
+            icon: Icon(Icons.grid_on),
+          ),
+          Tab(
+            icon: Icon(Icons.list),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget myBody() {
+    return Container(
+      margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: GetBuilder<DashboardController>(
+              builder: (r) => this.widgetListViewProdutos,
+            ),
+          ),
+          GestureDetector(
+            child: GetBuilder<DashboardController>(
+              builder: (r) => this.myCartPrice,
+            ),
+            onTap: () {
+              print('clicou');
+              refreshCartPrice();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -267,13 +267,13 @@ class CarrinhoController extends GetxController {
   myHeader(bool innerBoxIsScrolled) {
     return <Widget>[
       SliverAppBar(
-        floating: true,
+        title: Text("Meu Carrinho"),
         forceElevated: innerBoxIsScrolled,
         pinned: true,
+        centerTitle: true,
         titleSpacing: 0,
         actionsIconTheme: IconThemeData(opacity: 0.0),
-        title: myTitle('Meu Carrinho'),
-      ),
+      )
     ];
   }
 
@@ -286,28 +286,27 @@ class CarrinhoController extends GetxController {
   }
 
   Widget myBody() {
-    return RefreshIndicator(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: GetBuilder<CarrinhoController>(
-                      builder: (r) => this.widgetListViewProdutos,
-                    ),
-                  ),
-                ],
-              ),
+    return Container(
+      margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: GetBuilder<CarrinhoController>(
+              builder: (r) => this.widgetListViewProdutos,
             ),
-            Container(),
-          ],
-        ),
+          ),
+          GestureDetector(
+            child: GetBuilder<CarrinhoController>(
+              builder: (r) => this.myCartPrice,
+            ),
+            onTap: () {
+              print('clicou');
+              refreshCartPrice();
+            },
+          ),
+        ],
       ),
-      onRefresh: refreshLocalList,
     );
   }
 
@@ -320,22 +319,6 @@ class CarrinhoController extends GetxController {
         print('clicou');
         refreshCartPrice();
       },
-    );
-  }
-
-  Row myTitle(titulo) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-          child: Center(
-              child: Text(titulo,
-                  maxLines: 1,
-                  style: TextStyle(fontSize: 22, color: Colors.white))),
-        ),
-      ],
     );
   }
 }

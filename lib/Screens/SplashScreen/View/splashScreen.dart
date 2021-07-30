@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Models/products.dart';
+import '../../Dashboard/View/dashboard.dart';
 
 class SplashPage extends StatelessWidget {
   String appName = 'APP NAME';
@@ -20,7 +21,8 @@ class SplashPage extends StatelessWidget {
   }
 
   changeScreen() {
-    Get.toNamed('/dashboard');
+    //Get.toNamed('/dashboard');
+    Get.offAll(DashboardPage());
   }
 
   @override
