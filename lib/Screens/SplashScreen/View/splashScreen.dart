@@ -26,49 +26,48 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
-      bottomNavigationBar: footer(),
+      body: _newBody(),
     );
   }
 
-  Center _buildBody() {
+  Widget _newBody() {
     final titulo = Text(
       appName,
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
     );
 
-    return Center(
-        child: ListView(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(left: 24.0, right: 24.0),
-      children: <Widget>[
-        titulo,
-      ],
-    ));
-  }
-
-  Container footer() {
-    final titulo = Text(
+    final txtPoweredBy = Text(
       'Powered By:',
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
     );
-    final subTitulo = Text(
+
+    final txtCompanyName = Text(
       '@chiaradia.com.br',
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
     );
-    return Container(
-        child: ListView(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(left: 24.0, right: 24.0),
-      children: <Widget>[
-        titulo,
-        SizedBox(height: 12),
-        subTitulo,
-        SizedBox(height: 24)
+
+    return Stack(
+      children: [
+        Positioned(
+          top: Get.size.height / 2,
+          width: Get.size.width,
+          child: Align(
+            alignment: Alignment.center,
+            child: titulo,
+          ),
+        ),
+        Positioned(
+            bottom: 40,
+            width: Get.size.width,
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  children: [txtPoweredBy, txtCompanyName],
+                ))),
       ],
-    ));
+    );
   }
 }
