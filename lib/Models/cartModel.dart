@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:novo/Models/pedidosModel.dart';
+import 'package:novo/Data/pedidosData.dart';
 
-import '../Models/cartItems.dart';
+import '../Data/cartItemsData.dart';
 
 import 'dart:convert';
 import 'db.dart';
@@ -11,7 +11,7 @@ class Cart {
   final banco = DB.instance;
   double cartPrice = 0;
 
-  saveItem(CartItemsModel item) async {
+  saveItem(CartItemsData item) async {
     //verifico se o item já foi inserido no carrinho
     final count = await banco
         .query('SELECT id FROM cartItems WHERE productId=?', [item.productId]);
@@ -40,14 +40,14 @@ class Cart {
     }
   }
 
-  Future<List<CartItemsModel>> getProducts() async {
+  Future<List<CartItemsData>> getProducts() async {
     final result =
         await banco.query('SELECT * FROM cartItems WHERE pedidoId is Null', []);
 
     //var json = jsonDecode(await response.stream.bytesToString());
 
-    List<CartItemsModel> retorno = List<CartItemsModel>.from(
-        result.map((model) => CartItemsModel.fromJson(model)));
+    List<CartItemsData> retorno = List<CartItemsData>.from(
+        result.map((model) => CartItemsData.fromJson(model)));
 
     return retorno;
   }
@@ -81,8 +81,8 @@ class Cart {
     }
 
     //caso o valor do carrinho seja superior a zero, tenho que gerar o pedido gravar os itens.
-    PedidosModel pedido =
-        PedidosModel(dtPedido: new DateTime.now().millisecondsSinceEpoch);
+    PedidosData pedido =
+        PedidosData(dtPedido: new DateTime.now().millisecondsSinceEpoch);
 
     final idInsert = await banco.insert('pedidos', pedido.toMap());
     print('Pedido Criado : ${idInsert}');

@@ -6,12 +6,12 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:novo/Models/cartItems.dart';
-import '../../../Controllers/defaultController.dart';
+import 'package:novo/Data/cartItemsData.dart';
+import '../../../Models/defaultController.dart';
 
-import '../../../Controllers/products.dart';
-import '../../../Controllers/cartController.dart';
-import '../../../Models/productsModel.dart';
+import '../../../Models/products.dart';
+import '../../../Models/cartModel.dart';
+import '../../../Data/productsData.dart';
 import '../../../Widgets/textFieldSpinner.dart';
 import '../../ProductDetail/View/productDetail.dart';
 
@@ -233,7 +233,7 @@ class DashboardController extends GetxController {
                                   onChange: (id, e) async {
                                     print(
                                         model.title + ' - id:: $id - cont: $e');
-                                    await myCart.saveItem(CartItemsModel(
+                                    await myCart.saveItem(CartItemsData(
                                         productId: model.id,
                                         productName: model.title,
                                         productPrice: model.price,
@@ -319,7 +319,7 @@ class DashboardController extends GetxController {
             ),
             onChange: (id, e) async {
               print(model.title + ' - id:: $id - cont: $e');
-              await myCart.saveItem(CartItemsModel(
+              await myCart.saveItem(CartItemsData(
                   productId: model.id,
                   productName: model.title,
                   productPrice: model.price,

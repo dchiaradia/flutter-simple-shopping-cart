@@ -1,10 +1,10 @@
-class PedidosModel {
+class PedidosData {
   int? id;
   int? dtPedido;
 
-  PedidosModel({this.id, this.dtPedido});
+  PedidosData({this.id, this.dtPedido});
 
-  PedidosModel.fromJson(Map<String, dynamic> json) {
+  PedidosData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     dtPedido = json['dtPedido'];
   }

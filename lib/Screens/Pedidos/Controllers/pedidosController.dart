@@ -8,13 +8,13 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:novo/Controllers/pedidos.dart';
-import 'package:novo/Models/pedidosModel.dart';
-import '../../../Controllers/defaultController.dart';
+import 'package:novo/Models/pedidos.dart';
+import 'package:novo/Data/pedidosData.dart';
+import '../../../Models/defaultController.dart';
 
 class PedidoController extends GetxController {
   late Widget widgetListViewPedidos = Container();
-  late List<PedidosModel> listaPedidos;
+  late List<PedidosData> listaPedidos;
   Pedidos myPedido = new Pedidos();
 
   Widget myBottomBar(index) {
@@ -41,7 +41,7 @@ class PedidoController extends GetxController {
 
   Future<void> getAllPedidos() async {
     print('Buscando todos os pedidos...');
-    List<PedidosModel> listaPedidos = await myPedido.getAllPedidos();
+    List<PedidosData> listaPedidos = await myPedido.getAllPedidos();
     widgetListViewPedidos = await listViewPedidos(listaPedidos);
     update();
     print('Listagem de Pedidos Concluida!');
@@ -99,7 +99,7 @@ class PedidoController extends GetxController {
     );
   }
 
-  Widget listViewPedidos(List<PedidosModel> myList) {
+  Widget listViewPedidos(List<PedidosData> myList) {
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 0),
       child: ListView.builder(

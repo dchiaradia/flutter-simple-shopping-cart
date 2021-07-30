@@ -1,4 +1,4 @@
-import '../Models/productsModel.dart';
+import '../Data/productsData.dart';
 
 import 'db.dart';
 import '../Services/api.dart';

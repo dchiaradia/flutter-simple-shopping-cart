@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/products.dart';
+import '../../../Models/products.dart';
 
 class SplashPage extends StatelessWidget {
   String appName = 'APP NAME';

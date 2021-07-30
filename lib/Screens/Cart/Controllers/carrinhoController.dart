@@ -7,19 +7,19 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:novo/Controllers/products.dart';
-import 'package:novo/Models/cartItems.dart';
-import 'package:novo/Models/productsModel.dart';
+import 'package:novo/Models/products.dart';
+import 'package:novo/Data/cartItemsData.dart';
+import 'package:novo/Data/productsData.dart';
 
 //import '../Controllers/productsController.dart';
-import '../../../Controllers/defaultController.dart';
-import '../../../Controllers/cartController.dart';
+import '../../../Models/defaultController.dart';
+import '../../../Models/cartModel.dart';
 
 import '../../../Widgets/textFieldSpinner.dart';
 import '../../ProductDetail/View/productDetail.dart';
 
 class CarrinhoController extends GetxController {
-  late List<CartItemsModel> listaItens;
+  late List<CartItemsData> listaItens;
   Cart myCart = new Cart();
   late Widget widgetListViewProdutos = loadding(92, 92);
   late Widget myCartPrice = Container();
@@ -131,7 +131,7 @@ class CarrinhoController extends GetxController {
     );
   }
 
-  Widget listViewProducts(List<CartItemsModel> myList) {
+  Widget listViewProducts(List<CartItemsData> myList) {
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 0),
       child: ListView.builder(
@@ -219,7 +219,7 @@ class CarrinhoController extends GetxController {
                                       onChange: (id, e) async {
                                         print(model.productName +
                                             ' - id:: $id - cont: $e');
-                                        await myCart.saveItem(CartItemsModel(
+                                        await myCart.saveItem(CartItemsData(
                                             productId: model.productId,
                                             productName: model.productName,
                                             productPrice: model.productPrice,

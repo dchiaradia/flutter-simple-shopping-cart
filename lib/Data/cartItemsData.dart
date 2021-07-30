@@ -1,4 +1,4 @@
-class CartItemsModel {
+class CartItemsData {
   int? id;
   int? productId;
   String? productName;
@@ -7,7 +7,7 @@ class CartItemsModel {
   String? productImage;
   int? pedidoId;
 
-  CartItemsModel(
+  CartItemsData(
       {this.id,
       this.productId,
       this.productPrice,
@@ -16,7 +16,7 @@ class CartItemsModel {
       this.productImage,
       this.pedidoId});
 
-  CartItemsModel.fromJson(Map<String, dynamic> json) {
+  CartItemsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['productId'];
     productPrice = json['productPrice'].toDouble();
