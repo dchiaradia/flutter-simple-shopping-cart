@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class ProductDetailSheet extends StatelessWidget {
   String category = '';
@@ -11,6 +12,8 @@ class ProductDetailSheet extends StatelessWidget {
   String description = '';
   double price = 0;
   String image = '';
+
+  final List<String> imgList = [];
 
   ProductDetailSheet(String category, String title, String description,
       double price, String image,
@@ -21,6 +24,54 @@ class ProductDetailSheet extends StatelessWidget {
     this.description = description;
     this.price = price;
     this.image = image;
+
+    imgList.add(image);
+    imgList.add(image);
+    imgList.add(image);
+  }
+
+  List<Widget> imageSliders() {
+    return imgList
+        .map((item) => Container(
+              child: Container(
+                margin: EdgeInsets.all(5.0),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    child: Stack(
+                      children: <Widget>[
+                        Image.network(item, fit: BoxFit.contain, width: 1000.0),
+                        Positioned(
+                          bottom: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromARGB(255, 255, 255, 255),
+                                  Color.fromARGB(0, 0, 0, 0)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                            child: Text(
+                              '#${imgList.indexOf(item)}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ))
+        .toList();
   }
 
   @override
@@ -42,26 +93,19 @@ class ProductDetailSheet extends StatelessWidget {
                   SliverSafeArea(
                     bottom: false,
                     sliver: SliverToBoxAdapter(
-                      child: Container(
-                        height: 318,
-                        child: ListView(
-                          padding: EdgeInsets.all(12).copyWith(
-                              right:
-                                  MediaQuery.of(context).size.width / 2 - 100),
-                          reverse: true,
-                          scrollDirection: Axis.horizontal,
-                          physics: PageScrollPhysics(),
-                          children: <Widget>[
-                            Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.only(
-                                    left: 0, top: 0, right: 0, bottom: 0),
-                                child: CachedNetworkImage(
-                                    imageUrl: this.image,
-                                    height: 300,
-                                    width: 300)),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          CarouselSlider(
+                            options: CarouselOptions(
+                              aspectRatio: 2.0,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: true,
+                              scrollDirection: Axis.horizontal,
+                              autoPlay: true,
+                            ),
+                            items: imageSliders(),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -105,15 +149,6 @@ class ProductDetailSheet extends StatelessWidget {
             )));
   }
 
-  Widget sliverContactsSection(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        height: 132,
-        padding: EdgeInsets.only(top: 12),
-      ),
-    );
-  }
-
   PreferredSizeWidget appBar(BuildContext context) {
     return PreferredSize(
       preferredSize: Size(double.infinity, 74),
@@ -131,17 +166,6 @@ class ProductDetailSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(width: 18),
-                      /*
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Image.asset(
-                            'assets/demo_image.jpeg',
-                            fit: BoxFit.cover,
-                            height: 40,
-                            width: 40,
-                          )),
-                          */
-                      SizedBox(width: 12),
                       Expanded(
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
