@@ -91,27 +91,28 @@ class DashboardController extends GetxController {
     Products produtos = Products();
     listaProdutos = await produtos.getAllProducts();
 
-    widgetListViewProdutos =
-        TabBarView(physics: NeverScrollableScrollPhysics(), children: [
-      GridView.builder(
-          padding: EdgeInsets.all(4.0),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 4.0,
-            crossAxisSpacing: 4.0,
-            childAspectRatio: 0.65,
-          ),
-          itemCount: listaProdutos.length,
-          itemBuilder: (context, index) {
-            return gridViewProducsItem(listaProdutos[index], context);
-          }),
-      ListView.builder(
-          padding: EdgeInsets.all(4.0),
-          itemCount: listaProdutos.length,
-          itemBuilder: (context, index) {
-            return listViewProductsItem(listaProdutos[index], context);
-          })
-    ]);
+    widgetListViewProdutos = TabBarView(
+        //physics: NeverScrollableScrollPhysics(),
+        children: [
+          GridView.builder(
+              padding: EdgeInsets.all(3.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+                childAspectRatio: 0.65,
+              ),
+              itemCount: listaProdutos.length,
+              itemBuilder: (context, index) {
+                return gridViewProducsItem(listaProdutos[index], context);
+              }),
+          ListView.builder(
+              padding: EdgeInsets.all(4.0),
+              itemCount: listaProdutos.length,
+              itemBuilder: (context, index) {
+                return listViewProductsItem(listaProdutos[index], context);
+              })
+        ]);
     print('Tab View Montado');
     update();
   }
@@ -267,42 +268,45 @@ class DashboardController extends GetxController {
 
   Widget gridViewProducsItem(model, BuildContext context) {
     return GestureDetector(
-      child: Column(
-        children: [
-          Text(model.title.toString().capitalizeFirst!),
-          CachedNetworkImage(
-            imageUrl: model.image,
-            height: 92,
-            width: 92,
-          ),
-          Text('R\$ ${model.price}'),
-          TextFieldSpinner(
-              id: model.id.toString(),
-              initValue: 0,
-              minValue: 0,
-              maxValue: 99,
-              step: 1,
-              removeIcon: const Icon(
-                Icons.remove_circle,
-                size: 32,
-                color: Colors.red,
-              ),
-              addIcon: const Icon(
-                Icons.add_circle,
-                size: 32,
-                color: Colors.green,
-              ),
-              onChange: (id, e) async {
-                print(model.title + ' - id:: $id - cont: $e');
-                await myCart.saveItem(CartItemsData(
-                    productId: model.id,
-                    productName: model.title,
-                    productPrice: model.price,
-                    productImage: model.image,
-                    productQtd: e));
-                refreshCartPrice();
-              })
-        ],
+      child: Card(
+        margin: EdgeInsets.all(3.0),
+        child: Column(
+          children: [
+            Text(model.title.toString().capitalizeFirst!),
+            CachedNetworkImage(
+              imageUrl: model.image,
+              height: 92,
+              width: 92,
+            ),
+            Text('R\$ ${model.price}'),
+            TextFieldSpinner(
+                id: model.id.toString(),
+                initValue: 0,
+                minValue: 0,
+                maxValue: 99,
+                step: 1,
+                removeIcon: const Icon(
+                  Icons.remove_circle,
+                  size: 32,
+                  color: Colors.red,
+                ),
+                addIcon: const Icon(
+                  Icons.add_circle,
+                  size: 32,
+                  color: Colors.green,
+                ),
+                onChange: (id, e) async {
+                  print(model.title + ' - id:: $id - cont: $e');
+                  await myCart.saveItem(CartItemsData(
+                      productId: model.id,
+                      productName: model.title,
+                      productPrice: model.price,
+                      productImage: model.image,
+                      productQtd: e));
+                  refreshCartPrice();
+                })
+          ],
+        ),
       ),
       onTap: () {
         showCupertinoModalBottomSheet(
